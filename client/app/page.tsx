@@ -1,65 +1,111 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { BadgeCheck, LogOut, Mail, ShieldCheck } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { authClient } from "@/lib/auth-client";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
+  const { data, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isPending && (!data?.session || !data?.user)) {
+      router.push("/sign-in");
+    }
+  }, [isPending, data, router]);
+
+  if (isPending) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!data?.user) return null;
+
+  const { user } = data;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-zinc-50 dark:bg-black flex items-center justify-center px-5">
+      <div className="flex flex-col w-full items-center max-w-md">
+        <Card className="overflow-hidden shadow-xl w-full">
+          {/* Header */}
+          <CardHeader className="relative flex flex-col items-center gap-4 bg-gradient-to-b from-zinc-100 to-transparent dark:from-zinc-900 pt-8 pb-6">
+            <div className="relative">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                <AvatarImage
+                  src={user.image ?? undefined}
+                  alt={user.name ?? "User"}
+                />
+                <AvatarFallback className="text-lg font-semibold bg-primary/10">
+                  {user.name?.[0]?.toUpperCase() ?? "U"}
+                </AvatarFallback>
+              </Avatar>
+              {/* Online indicator */}
+              <div className="absolute -bottom-2 -right-2 w-7 h-7 bg-blue-500 rounded-full border-2 border-background flex items-center justify-center">
+                <BadgeCheck className="h-4 w-4 text-white" />
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h1 className="text-4xl font-bold tracking-tight">
+                Welcome, {user.name ?? "Unnamed User"}
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Authenticated user
+              </p>
+            </div>
+          </CardHeader>
+
+          <Separator />
+
+          <CardContent className="flex flex-col gap-6 py-6">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
+              <Mail className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="font-medium text-sm">Email address</p>
+                <p className="font-mono text-xs break-all text-muted-foreground mt-1">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
+              <ShieldCheck className="h-4 w-4" />
+              <span>Logged in securely via GitHub OAuth</span>
+            </div>
+
+            <Button
+              className="w-full gap-2 mt-2 bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors"
+              onClick={() =>
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => router.push("/sign-in"),
+                    onError: () => console.error("Sign out failed"),
+                  },
+                })
+              }
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </Button>
+          </CardContent>
+        </Card>
+
+        <div className="mt-6 flex w-full items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex-1 h-px bg-border" />
+          <span className="whitespace-nowrap">Session Active</span>
+          <div className="flex-1 h-px bg-border" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }

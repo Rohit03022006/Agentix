@@ -4,28 +4,37 @@ import dotenv from "dotenv";
 import chalk from "chalk";
 import figlet from "figlet";
 import { Command } from "commander";
-import { loginAction } from "./commands/auth/login.js";
+import { loginAction, logoutAction , whoamiAction  } from "./commands/auth/login.js";
+
 
 dotenv.config();
 
 async function main() {
   console.log(
     chalk.bold.red(
-      figlet.textSync("Better Auth CLI", {
+      figlet.textSync("AI Agent CLI", {
         font: "Standard",
         
         horizontalLayout: "default",
       })
     )
   );
-  console.log(chalk.yellowBright("Welcome to the Better Auth CLI!\n"));
+  console.log(chalk.yellowBright("Welcome to the AI Agent CLI!\n"));
 
   const loginCommand = new Command("login")
     .description("Login to the AI Agent CLI")
     .action(() => loginAction());
 
+  const logoutCommand = new Command("logout")
+    .description("Logout from the AI Agent CLI")
+    .action(() => logoutAction());
+
+  const whoamiCommand = new Command("whoami")
+    .description("Display information about the currently logged-in user")
+    .action(() => whoamiAction());
+    
   const program = new Command("cli-ai-tool");
-  program.version("1.0.0").description("CLI based AI Tool").addCommand(loginCommand);
+  program.version("1.0.0").description("CLI based AI Tool").addCommand(loginCommand).addCommand(logoutCommand).addCommand(whoamiCommand);
 
     program.action(() => {
         program.help();

@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { streamText, TextStreamChatTransport } from "ai";
+import { convertToModelMessages, streamText, TextStreamChatTransport } from "ai";
 import { googleConfig } from "../../config/google.config.js";
 import chalk from "chalk";
 import { config } from "dotenv";
@@ -10,10 +10,11 @@ export class AIService {
       throw new Error("Google API key is not configured in .env file.");
     }
 
-    this.model = google.googleGenerativeAI({
-      apiKey: googleConfig.googleApiKey,
-      model: googleConfig.model,
-    });
+    if (!googleConfig.model || typeof googleConfig.model !== 'string') {
+      throw new Error(`Invalid model configuration: ${googleConfig.model}. Expected a string model name like 'gemini-1.5-flash'.`);
+    }
+
+    this.modelId = googleConfig.model;
   }
 
   /**
@@ -26,11 +27,10 @@ export class AIService {
    */
   async sendMessage(message, onChunk, tool = undefined, onToolCall = null) {
     try {
-      const streamConfig = {
-        model: this.model,
+      const result = streamText({
+        model: google(this.modelId),
         messages: message,
-      };
-      const result = streamText(streamConfig);
+      });
 
       let fullResponse = "";
       for await (const chunk of result.textStream) {
@@ -66,3 +66,4 @@ export class AIService {
     return fullResponse;
   }
 }
+

@@ -12,7 +12,6 @@ import { ChatService } from "../../service/chat.service.js";
 import { getStoredToken } from "../commands/auth/login.js";
 import prisma from "../../lib/db.js";
 
-
 marked.use(
   markedTerminal({
     code: chalk.cyan,
@@ -37,11 +36,9 @@ const chatService = new ChatService();
 
 async function getUserFromToken() {
   const token = await getStoredToken();
-
   if (!token?.access_token) {
     throw new Error("Not authenticated. Please log in.");
   }
-
   const spinner = yoctoSpinner({ text: "Authenticating..." });
   spinner.start();
 
@@ -71,7 +68,6 @@ async function initConversation(userId, conversationId = null, mode = "chat") {
       conversationId,
       mode
     );
-
     spinner.success("Conversation ready.");
     const infoBox = boxen(
       `${chalk.bold("Conversation")}: ${conversation.title}\n` +
@@ -106,7 +102,7 @@ function showConversationEndBox(conversation) {
     `${chalk.bold.green("Conversation Ended")}\n\n` +
       `${chalk.gray("Title: " + conversation.title)}\n` +
       `${chalk.gray("ID: " + conversation.id)}\n` +
-      `${chalk.gray("Mode: " + conversation.mode)}\n\n` +
+      `${chalk.gray("Mode: " + conversation.mode)}\n` +
       `${chalk.dim("Thank you for chatting. See you next time! 👋")}`,
     {
       padding: 1,
@@ -120,7 +116,6 @@ function showConversationEndBox(conversation) {
 
   console.log(endBox);
 }
-
 
 function displayMessages(messages) {
   messages.forEach((msg) => {
@@ -147,7 +142,7 @@ function displayMessages(messages) {
 }
 
 async function saveMessage(conversationId, role, content) {
-  return chatService.addMessage(conversationId, role, content);
+  return await chatService.addMessage(conversationId, role, content);
 }
 
 async function aiResponse(conversationId) {
@@ -214,9 +209,31 @@ async function chatLoop(conversation) {
       },
     });
 
-    if (isCancel(userInput)) process.exit(0);
+    if (isCancel(userInput)) {
+      const exitBox = boxen(chalk.yellow("Chat session ended. Goodbye!"), {
+        padding: 1,
+        margin: 1,
+        borderStyle: "round",
+        borderColor: "yellow",
+      });
 
-    if (userInput.trim().toLowerCase() === "exit") break;
+      console.log(exitBox);
+      process.exit(0);
+    }
+
+    if (userInput.trim().toLowerCase() === "exit") {
+      const exitBox = boxen(chalk.yellow("Chat session ended. Goodbye! 👋"), {
+        padding: 1,
+        margin: 1,
+        borderStyle: "round",
+        borderColor: "yellow",
+      });
+
+      console.log(exitBox);
+      break;
+    }
+
+       
 
     await saveMessage(conversation.id, "user", userInput);
 
@@ -227,9 +244,8 @@ async function chatLoop(conversation) {
 
     await updateConversationTitle(conversation, userInput, messages.length);
   }
-   showConversationEndBox(conversation);
+  showConversationEndBox(conversation);
 }
-
 
 export async function startChat(mode = "chat", conversationId = null) {
   try {
@@ -246,7 +262,7 @@ export async function startChat(mode = "chat", conversationId = null) {
 
     await chatLoop(conversation);
 
-    outro(chalk.green("Thanks for chatting! 👋"));
+    outro(chalk.green("Thanks for chatting!"));
   } catch (error) {
     console.error(
       boxen(chalk.red(`Error: ${error.message}`), {
@@ -258,4 +274,3 @@ export async function startChat(mode = "chat", conversationId = null) {
     process.exit(1);
   }
 }
-

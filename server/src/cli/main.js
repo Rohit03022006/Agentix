@@ -10,27 +10,29 @@ import {
   whoamiAction,
 } from "./commands/auth/login.js";
 import { wakeUpAction } from "./commands/ai/wakeUp.js";
-
+import gradient from "gradient-string";
 dotenv.config();
 
 async function main() {
-  console.log(
-    chalk.bold.red(
-      figlet.textSync("AI Agent CLI", {
-        font: "Standard",
 
-        horizontalLayout: "default",
-      })
-    )
+  const asciiArt = figlet.textSync("Agentix", {
+    font: "ANSI Shadow",
+    horizontalLayout: "full",
+    verticalLayout: "full"
+  });
+  console.log("\n\n");
+
+  console.log(
+    gradient(["#2c4fb8", "#2bb673", "#f2c94c"])(asciiArt)
   );
-  console.log(chalk.yellowBright("Welcome to the AI Agent CLI!\n"));
+  console.log(chalk.yellowBright("Welcome to the Agentix CLI!\n"));
 
   const loginCommand = new Command("login")
-    .description("Login to the AI Agent CLI")
+    .description("Login to the Agentix CLI")
     .action(() => loginAction());
 
   const logoutCommand = new Command("logout")
-    .description("Logout from the AI Agent CLI")
+    .description("Logout from the Agentix CLI")
     .action(() => logoutAction());
 
   const whoamiCommand = new Command("whoami")
@@ -41,7 +43,7 @@ async function main() {
     .description("Wake Up the AI")
     .action(wakeUpAction);
 
-  const program = new Command("cli-ai-tool");
+  const program = new Command("agentix");
   program
     .version("1.0.0")
     .description("CLI based AI Tool")

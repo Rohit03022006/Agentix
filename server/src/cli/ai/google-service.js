@@ -102,4 +102,27 @@ export class AIService {
     );
     return result.content;
   }
+
+  /**
+ * Generate structured output using Zod schema
+ * @param {object} schema - Zod schema
+ * @param {String} prompt - Prompt to generate output  
+ *  @returns {Promise<string>} - parsed object matched with schema
+ */
+
+  async generateStructured(schema, prompt) {
+    try {
+      const result = await generateObject({
+        model: this.modelId,
+        schema: schema,
+        prompt: prompt,
+      });
+      return result.object;
+    } catch (error) {
+      console.log(chalk.red("Ai Structured Error:"), error.message);
+      throw error;
+    }
+  }
+
+
 }

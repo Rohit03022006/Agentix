@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const MODEL_NAME = process.env.AI_Agent_CLI || "gemini-2.5-flash";
+const MODEL_NAME = process.env.GOOGLE_MODEL || "gemini-2.5-flash";
 
 // Validate that the model is a string
 if (!MODEL_NAME || typeof MODEL_NAME !== "string") {

@@ -1,0 +1,22 @@
+{
+  "name": "calculator-app",
+  "version": "1.0.0",
+  "description": "A simple calculator application built with HTML, Tailwind CSS, and vanilla JavaScript.",
+  "main": "src/app.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "start": "concurrently \"npm run watch:css\" \"http-server . -p 8080\"",
+    "dev": "npm start"
+  },
+  "keywords": ["calculator", "html", "tailwind", "javascript"],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}

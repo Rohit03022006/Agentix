@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Calculator</title>
+    <link rel="stylesheet" href="dist/output.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script defer src="src/app.js"></script>
+  </head>
+  <body
+    class="flex items-center justify-center min-h-screen bg-gray-900 font-sans text-white"
+  >
+    <div
+      class="calculator bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700"
+    >
+      <div
+        id="display"
+        class="bg-gray-700 text-right p-4 mb-6 rounded-lg text-4xl font-mono overflow-hidden break-words min-h-[5rem] flex flex-col justify-end"
+      >
+        <div id="previous-operand" class="text-gray-400 text-xl"></div>
+        <div id="current-operand">0</div>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4">
+        <button
+          data-all-clear
+          class="col-span-2 bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          AC
+        </button>
+        <button
+          data-delete
+          class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          DEL
+        </button>
+        <button
+          data-operation="/"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          /
+        </button>
+
+        <button
+          data-number="7"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          7
+        </button>
+        <button
+          data-number="8"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          8
+        </button>
+        <button
+          data-number="9"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          9
+        </button>
+        <button
+          data-operation="*"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          *
+        </button>
+
+        <button
+          data-number="4"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          4
+        </button>
+        <button
+          data-number="5"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          5
+        </button>
+        <button
+          data-number="6"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          6
+        </button>
+        <button
+          data-operation="-"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          -
+        </button>
+
+        <button
+          data-number="1"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          1
+        </button>
+        <button
+          data-number="2"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          2
+        </button>
+        <button
+          data-number="3"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          3
+        </button>
+        <button
+          data-operation="+"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          +
+        </button>
+
+        <button
+          data-number="0"
+          class="col-span-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          0
+        </button>
+        <button
+          data-number="."
+          class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          .
+        </button>
+        <button
+          data-equals
+          class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-lg text-2xl transition duration-200 ease-in-out shadow-md"
+        >
+          =
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

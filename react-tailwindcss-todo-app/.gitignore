@@ -1,0 +1,57 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+.report/
+
+# Runtime data
+.next/
+.nuxt/
+.vercel/
+.svelte-kit/
+.stackblitz/
+.turbo/
+dist/
+.env
+.env*.local
+/.idea
+.vitepress/cache
+.astro/
+npm-cache
+.eslintcache
+
+# Dependencies
+/node_modules
+
+# IDEs and Editors
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Thumbnails
+.thumbs
+
+# Build output
+/build
+/dist
+/out
+/coverage
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# misc
+.prettierrc.local

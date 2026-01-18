@@ -1,8 +1,10 @@
-import fs from "fs";
-import path from "path";
+import fs from "fs/promises";
+import path from "node:path";
+
 import chalk from "chalk";
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
+import { googleConfig } from "./google.config.js";
 import z from "zod";
 
 
@@ -49,7 +51,14 @@ function displayFileTree(files, folderName) {
 
     const filesByDir = {};
 
-    files.forEach(file => {
+    files.forEach((file, index) => {
+        if (!file?.path || typeof file.path !== "string") {
+            printSystem(
+                chalk.red(`Invalid file entry at index ${index}: ${JSON.stringify(file)}`)
+            );
+            return; // skip invalid entry
+        }
+
         const parts = file.path.split('/');
         const dir = parts.length > 1 ? parts.slice(0, -1).join('/') : '';
         const fileName = parts[parts.length - 1];
@@ -67,7 +76,6 @@ function displayFileTree(files, folderName) {
                 printSystem(chalk.white(`|  └── ${fileName}`));
             });
         } else {
-            // Root files
             filesByDir[dir].forEach(fileName => {
                 printSystem(chalk.white(`|-- ${fileName}`));
             });
@@ -75,17 +83,19 @@ function displayFileTree(files, folderName) {
     });
 }
 
+
 async function createApplicationFiles(baseDir, folderName, files) {
     const appDir = path.join(baseDir, folderName);
-    await fs.mkdirSync(appDir, { recursive: true });
+    await fs.mkdir(appDir, { recursive: true });
     printSystem(chalk.cyan(`Creating directory ${folderName}/`));
 
     for (const file of files) {
         const filePath = path.join(appDir, file.path);
         const dir = path.dirname(filePath);
 
-        await fs.mkdirSync(dir, { recursive: true });
-        await fs.writeFile(filePath, file.content, 'utf-8');
+        await fs.mkdir(dir, { recursive: true });
+        await fs.writeFile(filePath, file.content, { encoding: "utf-8" });
+
         printSystem(chalk.green(`Created file ${filePath}`));
     }
 
@@ -93,12 +103,19 @@ async function createApplicationFiles(baseDir, folderName, files) {
 }
 
 
+
 export async function generateApplication(description, aiService, cwd = process.cwd()) {
     try {
         printSystem(chalk.cyan("Agent mode: Generating Application...\n"));
         printSystem(chalk.white(`Request: ${description}\n`));
 
-        const model = google(aiService.modelName);
+        // Resolve model name from aiService when provided, otherwise
+        // fall back to configured model from `google.config.js`.
+        const modelName = aiService && typeof aiService === "object" && aiService.modelName
+            ? aiService.modelName
+            : (typeof aiService === "string" ? undefined : undefined) ?? googleConfig.model;
+
+        const model = google(modelName);
         const result = await generateObject({
             model,
             schema: ApplicationSchema,

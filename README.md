@@ -6,6 +6,8 @@ A developer-focused command-line AI agent platform for local development and int
 
 ![Agentix CLI](https://github.com/Rohit03022006/Agentix/blob/master/CLI.png)
 
+## Demo 
+![Agentix DEMO](https://github.com/Rohit03022006/Agentix/blob/master/DEMO.gif)
 
 ## Tech Stack
 
